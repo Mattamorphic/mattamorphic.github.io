@@ -1,4 +1,88 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Mattamorphic]]></title><description><![CDATA[All things Mattamorphic.]]></description><link>https://mattamorphic.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 06 Jun 2020 14:42:25 GMT</lastBuildDate><item><title><![CDATA[Hello, world!]]></title><description><![CDATA[Hello, friend! Hello there friend, I'm Matt - and welcome to my blog. Disclaimer Cards firmly on the table, I've never been that great at…]]></description><link>https://mattamorphic.github.io/hello-world/</link><guid isPermaLink="false">https://mattamorphic.github.io/hello-world/</guid><pubDate>Mon, 01 Jun 2020 17:00:32 GMT</pubDate><content:encoded>&lt;h2&gt;Hello, friend!&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Mattamorphic]]></title><description><![CDATA[All things Mattamorphic.]]></description><link>https://mattamorphic.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 08 Sep 2020 08:39:39 GMT</lastBuildDate><item><title><![CDATA[Simulated Annealing in Numerical Optimization]]></title><description><![CDATA[Simulated annealing in numerical optimization A quick referesher on numerical optimization What is a probabilistic approach? A probabilistic…]]></description><link>https://mattamorphic.github.io/probabilistic-numerical-optimization/</link><guid isPermaLink="false">https://mattamorphic.github.io/probabilistic-numerical-optimization/</guid><pubDate>Fri, 19 Jun 2020 18:00:32 GMT</pubDate><content:encoded>&lt;h2&gt;Simulated annealing in numerical optimization&lt;/h2&gt;
+&lt;h3&gt;A quick referesher on numerical optimization&lt;/h3&gt;
+&lt;h3&gt;What is a probabilistic approach?&lt;/h3&gt;
+&lt;p&gt;A probabilistic approach to numerical optimization applies elements of randomness to determine where to search next in the domain. The run time of the algorithm is dependent on the incoming random values that are presented to it. Sometimes, this will mean that it gets close to a global optimum really quickly, other times this might take longer - this is owing to the non-deterministic nature of randomness.&lt;/p&gt;
+&lt;p&gt;The longer time provided to the algorithm, the more likely it is to arrive at the global optimum - such that as the total time approaches infinity, the probability approaches 1.&lt;/p&gt;
+&lt;p&gt;Practically, we don&apos;t have infinity, go there is no guarantee we are going to reach a global optimum.&lt;/p&gt;
+&lt;p&gt;A variable probability is applied to determine how likely a weaker solution will be chosen on each new step, allowing us to search further in the domain, this reduces as a function of the remaining run time.&lt;/p&gt;
+&lt;h3&gt;What is simulated annealing?&lt;/h3&gt;
+&lt;p&gt;As we mentioned above, Simulated annealing is a probabilistic method of numerical optimization.&lt;/p&gt;
+&lt;p&gt;The name comes from a metallurgy process called annealing, whereby depending upon the rate at which metal cools, the proprties of that metal can be adjusted. For example if annealed slowly, metals become more ductile, malleable, and tougher. If annealed quickly metals become harder and more brittle. &lt;/p&gt;
+&lt;p&gt;Simulated annealing models the cooling schedule, by assigning an initial temperature, and the number of iterations available. &lt;/p&gt;
+&lt;p&gt;The first decision when applying simulated annealing is to decide what the initial temperature will be, given that the final temperature will be 0 the time taken to cool from the initial temperature to the final temperature is the total iteration budget.&lt;/p&gt;
+&lt;p&gt;Simulated annealing, unlike first and second order methods of optimization will use all of the iterations available to find the most optimal solution.&lt;/p&gt;
+&lt;h3&gt;How does simulated anealing work?&lt;/h3&gt;
+&lt;p&gt;The cooling schedule (iteration budget) has a direct affect on what weaker solutions are accepted. It&apos;s important to know the neighbours of the current state we are in, as well as the likelihood of a weaker solution being acceoted (acceptance probabilities).&lt;/p&gt;
+&lt;p&gt;On each iteration a decision is made to move to a new state from the current state. This could be a stronger state, this could be a weaker state. &lt;/p&gt;
+&lt;p&gt;The current temperature determines the decision made, the higher the temperature the higher the probability that weaker states are accepted, as the temperature decreases the probabilities change, such that more optimal states (with lower energy) will be selected.&lt;/p&gt;
+&lt;p&gt;Earlier in the cooling schedule, where the temperature is higher, the algorithm may venture further away from the current optimum, accepting weaker solutions, as there is enough time to get back to an optimum.&lt;/p&gt;
+&lt;p&gt;In the later stages there are less iterations remaining, so the algorithm cannot venture as far away, so will accept stronger solutions towards the optimum.&lt;/p&gt;
+&lt;h3&gt;Determining an Energy Function&lt;/h3&gt;
+&lt;p&gt;The goal of simulated anealing is to minimise the value of an energy function (&lt;code class=&quot;language-text&quot;&gt;E(s)&lt;/code&gt;). This is analogous to the merit function in numeric optimisation, and expresses what you are optimising for (&quot;What is wished for&quot;) by minimisation.&lt;/p&gt;
+&lt;h3&gt;Neighbours of state&lt;/h3&gt;
+&lt;p&gt;On each iteration small changes are made to the current state, for instance in continuous domains this might be a small change in coordinates, in combinatorial domains this might be swapping of two elements in a permuation.&lt;/p&gt;
+&lt;p&gt;With these small changes in the current state the algorithm is looking to increment towards the global optimum. Each move gives rise to a different set of neighbouring states.&lt;/p&gt;
+&lt;p&gt;Although a btter neighbour is desired, weaker neighbours are also accpeted based on probability to prevent getting stuck as this current local optimum.&lt;/p&gt;
+&lt;h3&gt;Acceptance probabilities&lt;/h3&gt;
+&lt;p&gt;Acceptance probabilities determine if one of the neighbours should be accepted. This acceptance probability function takes the current state, the neigbour, the energy of the current state, the energy of the neighbour, and the current temperature.&lt;/p&gt;
+&lt;p&gt;Using these parameters a probability is caluclated as a function of the energies of the two states and the current temperature.&lt;/p&gt;
+&lt;p&gt;What does this mean?&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Lower energy states are more desirable than higher energy states&lt;/li&gt;
+&lt;li&gt;If the neigbour state has a higher energy, and is therefore a weaker solution, the probability returned by the function should still be positive&lt;/li&gt;
+&lt;li&gt;As the temperature descreases, this probability should tend towards 0, increasingly favouring lower energy states.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Finally randomisation based on the probability is used to determine if the current state, or the neighbour is accepted.&lt;/p&gt;
+&lt;h3&gt;Summary&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Simulated algorithm uses an initial temperature, and a final temperature (0) to a determine the iteration budget&lt;/li&gt;
+&lt;li&gt;A current state is passed through an energy function to create a value (lower the better)&lt;/li&gt;
+&lt;li&gt;Small changes are made to this state to create neighbours of state, and these are passed through an energy function to create a value (lower the better)&lt;/li&gt;
+&lt;li&gt;All of this information is passed into a function that tests the values against acceptance probabilities ba&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Psuedocode&lt;/h3&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;current_state = determine an initial state
+temperature = // starting temperature for the process, how many iterations to start the annealing from?
+scale = // The rate of cooling
+
+
+while temperature &amp;gt; 0:
+    temperature = temperature - scale       // Reduce the temperature
+    
+    // Find a neighbour (a small change to the current state)
+    neighbour_state = move(current_state)   // Pick a neighbour of current_state
+    
+    // Determine the energiges
+    current_energy = E(current_state)       // Calculate the energy of the current state
+    neighbour_energy = E(neighbour_state)   // Calculate the energy of the neighbouring state
+
+    // Apply acceptance probabilities to determine the next state
+    if P(current_energy, neighbour_energy, temperature) &amp;gt;= random(0,1): // Use the energies from both states, and the temperature to create a probability value
+      current_state = neighbour_state
+
+// Current state contains the selected optimal
+print current_state&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Python example&lt;/h3&gt;
+&lt;p&gt;You can see an &lt;a href=&quot;https://github.com/perrygeo/simanneal/blob/master/examples/salesman.py&quot;&gt;example&lt;/a&gt; of this in the &lt;code class=&quot;language-text&quot;&gt;simanneal&lt;/code&gt; library (&lt;code class=&quot;language-text&quot;&gt;pip install simanneal&lt;/code&gt;)&lt;/p&gt;
+&lt;p&gt;In this example the Energy function acts as the merit function and calculates a value based on the current state: &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;python&quot;&gt;&lt;pre class=&quot;language-python&quot;&gt;&lt;code class=&quot;language-python&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;energy&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;self&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token triple-quoted-string string&quot;&gt;&quot;&quot;&quot;Calculates the length of the route.&quot;&quot;&quot;&lt;/span&gt;
+    e &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;for&lt;/span&gt; i &lt;span class=&quot;token keyword&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token builtin&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;self&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;state&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        e &lt;span class=&quot;token operator&quot;&gt;+=&lt;/span&gt; self&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;distance_matrix&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;self&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;state&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;i&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;self&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;state&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;i&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; e&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The move function makes small changes to the current state (in the case of the travelling salesman, swapping 2 cities in the route), to determine the neighbours of state, and passes these neighbours of state through the energy function to create a value, and return the difference to the energy of the current state:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;python&quot;&gt;&lt;pre class=&quot;language-python&quot;&gt;&lt;code class=&quot;language-python&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;move&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;self&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token triple-quoted-string string&quot;&gt;&quot;&quot;&quot;Swaps two cities in the route.&quot;&quot;&quot;&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;# no efficiency gain, just proof of concept&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;# demonstrates returning the delta energy (optional)&lt;/span&gt;
+    initial_energy &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; self&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;energy&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+    a &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; random&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;randint&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;self&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;state&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    b &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; random&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;randint&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;self&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;state&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    self&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;state&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;a&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; self&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;state&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;b&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; self&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;state&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;b&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; self&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;state&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;a&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+
+    &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; self&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;energy&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt; initial_energy&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[Hello, world!]]></title><description><![CDATA[Hello, friend! Hello there friend, I'm Matt - and welcome to my blog. Disclaimer Cards firmly on the table, I've never been that great at…]]></description><link>https://mattamorphic.github.io/hello-world/</link><guid isPermaLink="false">https://mattamorphic.github.io/hello-world/</guid><pubDate>Mon, 01 Jun 2020 17:00:32 GMT</pubDate><content:encoded>&lt;h2&gt;Hello, friend!&lt;/h2&gt;
 &lt;p&gt;Hello there friend, I&apos;m Matt - and welcome to my blog.&lt;/p&gt;
 &lt;h3&gt;Disclaimer&lt;/h3&gt;
 &lt;p&gt;Cards firmly on the table, I&apos;ve never been that great at keeping a blog up to date. Previous data would suggest that my posting is sporadic at best,
