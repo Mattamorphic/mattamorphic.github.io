@@ -81,201 +81,198 @@ Generate a range for each of the parents:</li>
 <li>
 <p><code class="language-text">C = [0.8, 1.0]</code></p>
 <ul>
-<li>
-<p>Generate random numbers to select the parents: <code class="language-text">0.6, 0.9 = B, C</code>
-Mix the genetic code based on random numbers:</p>
+<li>Generate random numbers to select the parents: <code class="language-text">0.6, 0.9 = B, C</code></li>
+</ul>
+</li>
+</ul>
+<p>Mix the genetic code based on random numbers:</p>
 <div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">Parent B: 1001 1100
-Parent C: 1101 1011</code></pre></div>
-</li>
+Parent C: 1101 1011
+Random Numbers: 0.1, 0.9, 0.6, 0.2, 0.8, 0.3, 0.4, 0.7
+
+Child: 1101 1101</code></pre></div>
+<h5>Mutation</h5>
+<p>Mutation involves changing parts of the children independent of the parents to ensure genetic diversity.</p>
+<h3>Disadvantages of genetic algorithms</h3>
+<ul>
+<li>Repeated fitness evaluations exhaust a lot of computational time.</li>
+<li>Scalability with complexity is poor.</li>
+<li>Better solutions are only better relative to other candidate solutions.</li>
+<li>Genetic algorithms will converge on local optima, unlike simulated annealing that sacrifices local fitness to find better global fitness.</li>
 </ul>
-</li>
+<h3>Example</h3>
+<p>In this example we'll look at implementing a genetic algorithm using <a href="https://github.com/DEAP/deap">DEAP</a>, an evolutionary computational framework available in Python, to solve the <em>One Max Problem</em>.</p>
+<h4>One Max Problem</h4>
+<p>This is a simple optimization problem, the task is to find the binary string of a given length that maximizes the sum of it's digits. For example, the one max of length 5 will consider: </p>
+<ul>
+<li><code class="language-text">10010 : 2</code></li>
+<li><code class="language-text">01110 : 3</code></li>
+<li><code class="language-text">11111 : 5</code></li>
 </ul>
-<p>Random Numbers: 0.1, 0.9, 0.6, 0.2, 0.8, 0.3, 0.4, 0.7</p>
-<p>Child: 1101 1101</p>
-<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">##### Mutation
-Mutation involves changing parts of the children independent of the parents to ensure genetic diversity.
+<p>We can see that the solution to this problem will always be a string that comprises all 1s, however the genetic algorithm doesn't know this, and has to look fo this solution using evolution. This makes it a great test case.</p>
+<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token keyword">import</span> random
 
-### Disadvantages of genetic algorithms
-- Repeated fitness evaluations exhaust a lot of computational time.
-- Scalability with complexity is poor.
-- Better solutions are only better relative to other candidate solutions.
-- Genetic algorithms will converge on local optima, unlike simulated annealing that sacrifices local fitness to find better global fitness.
+<span class="token keyword">from</span> deap <span class="token keyword">import</span> base<span class="token punctuation">,</span> creator<span class="token punctuation">,</span> tools
 
-### Example
-In this example we&#39;ll look at implementing a genetic algorithm using [DEAP](https://github.com/DEAP/deap), an evolutionary computational framework available in Python, to solve the *One Max Problem*.
+<span class="token comment"># Creator is a class factory that builds new classes at run-time</span>
+<span class="token comment"># The first parameter is the name of the new class</span>
+<span class="token comment"># The second parameter is the base class it will inherit</span>
+<span class="token comment"># Subsequent arguments are the attributes of the class</span>
+<span class="token comment">#</span>
+<span class="token comment"># Example:</span>
+<span class="token comment">#   creator.create("Student", Person, name="Matt")</span>
 
-#### One Max Problem
-This is a simple optimization problem, the task is to find the binary string of a given length that maximizes the sum of it&#39;s digits. For example, the one max of length 5 will consider: 
-- `10010 : 2`
-- `01110 : 3`
-- `11111 : 5`
+<span class="token comment"># FitnessMax inherits from Fitness class of `deap.base` module</span>
+<span class="token comment"># This has an additional attribute called `weights`</span>
+<span class="token comment"># The value of weights is a tuple</span>
+creator<span class="token punctuation">.</span>create<span class="token punctuation">(</span><span class="token string">"FitnessMax"</span><span class="token punctuation">,</span> base<span class="token punctuation">.</span>Fitness<span class="token punctuation">,</span> weights<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">1.0</span><span class="token punctuation">,</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-We can see that the solution to this problem will always be a string that comprises all 1s, however the genetic algorithm doesn&#39;t know this, and has to look fo this solution using evolution. This makes it a great test case.
+<span class="token comment"># Individual inherits from pythons list class, and contains</span>
+<span class="token comment"># FitnessMax as it's fitness attribute. This will represent an </span>
+<span class="token comment"># individual in the population</span>
+creator<span class="token punctuation">.</span>create<span class="token punctuation">(</span><span class="token string">"Individual"</span><span class="token punctuation">,</span> <span class="token builtin">list</span><span class="token punctuation">,</span> fitness<span class="token operator">=</span>creator<span class="token punctuation">.</span>FitnessMax<span class="token punctuation">)</span>
 
-```python
-import random
+<span class="token comment"># Toolbox is used to configure the genetic algorithm</span>
+<span class="token comment"># and allows us to register, and unregister content</span>
+toolbox <span class="token operator">=</span> base<span class="token punctuation">.</span>Toolbox<span class="token punctuation">(</span><span class="token punctuation">)</span>
 
-from deap import base, creator, tools
+<span class="token comment"># Attribute generator - to generate a random integer between 0 and 1</span>
+toolbox<span class="token punctuation">.</span>register<span class="token punctuation">(</span><span class="token string">"attr_bool"</span><span class="token punctuation">,</span> random<span class="token punctuation">.</span>randint<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
 
-# Creator is a class factory that builds new classes at run-time
-# The first parameter is the name of the new class
-# The second parameter is the base class it will inherit
-# Subsequent arguments are the attributes of the class
-#
-# Example:
-#   creator.create(&quot;Student&quot;, Person, name=&quot;Matt&quot;)
+<span class="token comment"># Structure initializers instatiate the individual and the population</span>
+<span class="token comment">#</span>
+<span class="token comment"># Here we are registering an individual, and an individual will be generated using</span>
+<span class="token comment"># the function initRepeat. The first argument to initRepeat is the container class, the Individual</span>
+<span class="token comment"># we created above. This container will be filled using the method attr_bool we registered above, </span>
+<span class="token comment"># provided as a second argument, and will contain 100 integers as specified using the third argument.</span>
+<span class="token comment">#</span>
+<span class="token comment"># The individual method will return an individual initialize with the same result as us calling</span>
+<span class="token comment"># attr_bool 100 times</span>
+toolbox<span class="token punctuation">.</span>register<span class="token punctuation">(</span><span class="token string">"individual"</span><span class="token punctuation">,</span> tools<span class="token punctuation">.</span>initRepeat<span class="token punctuation">,</span> creator<span class="token punctuation">.</span>Individual<span class="token punctuation">,</span> toolbox<span class="token punctuation">.</span>attr_bool<span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span>
 
-# FitnessMax inherits from Fitness class of `deap.base` module
-# This has an additional attribute called `weights`
-# The value of weights is a tuple
-creator.create(&quot;FitnessMax&quot;, base.Fitness, weights=(1.0,))
+<span class="token comment"># Here we are registering a population, an a population will be generated using</span>
+<span class="token comment"># the function initRepeat. The first argument to initRepeat is the container class, in this case</span>
+<span class="token comment"># Pythons native list class, and this will be filled with the individuals we registered to the toolbox</span>
+<span class="token comment"># Unlike registering the structure of individual, we don't fix the number of individuals that the population</span>
+<span class="token comment"># should contain</span>
+toolbox<span class="token punctuation">.</span>register<span class="token punctuation">(</span><span class="token string">"population"</span><span class="token punctuation">,</span> tools<span class="token punctuation">.</span>initRepeat<span class="token punctuation">,</span> <span class="token builtin">list</span><span class="token punctuation">,</span> toolbox<span class="token punctuation">.</span>individual<span class="token punctuation">)</span>
 
-# Individual inherits from pythons list class, and contains
-# FitnessMax as it&#39;s fitness attribute. This will represent an 
-# individual in the population
-creator.create(&quot;Individual&quot;, list, fitness=creator.FitnessMax)
+<span class="token comment"># The evaulation function takes in an individual (a child of Pythons native list)</span>
+<span class="token comment"># And sum's all the integers in that list (0 or 1). The returned value from the evaluation function</span>
+<span class="token comment"># must be of a legnth equal to the number of objectives (weights) defined in FitnessMax</span>
+<span class="token keyword">def</span> <span class="token function">evalOneMax</span><span class="token punctuation">(</span>individual<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> <span class="token builtin">sum</span><span class="token punctuation">(</span>individual<span class="token punctuation">)</span><span class="token punctuation">,</span>
 
-# Toolbox is used to configure the genetic algorithm
-# and allows us to register, and unregister content
-toolbox = base.Toolbox()
+<span class="token comment"># Next we should register the genetic operators. </span>
+<span class="token comment">#</span>
+<span class="token comment"># Here we are registering the evaluation function to pass the individual into</span>
+toolbox<span class="token punctuation">.</span>register<span class="token punctuation">(</span><span class="token string">"evaluate"</span><span class="token punctuation">,</span> evalOneMax<span class="token punctuation">)</span>
 
-# Attribute generator - to generate a random integer between 0 and 1
-toolbox.register(&quot;attr_bool&quot;, random.randint, 0, 1)
+<span class="token comment"># Here we are registering the mating process, we can use the cxTwoPoint method. This executes</span>
+<span class="token comment"># a two point crossover (k) on the input sequence of individuals.</span>
+toolbox<span class="token punctuation">.</span>register<span class="token punctuation">(</span><span class="token string">"mate"</span><span class="token punctuation">,</span> tools<span class="token punctuation">.</span>cxTwoPoint<span class="token punctuation">)</span>
 
-# Structure initializers instatiate the individual and the population
-#
-# Here we are registering an individual, and an individual will be generated using
-# the function initRepeat. The first argument to initRepeat is the container class, the Individual
-# we created above. This container will be filled using the method attr_bool we registered above, 
-# provided as a second argument, and will contain 100 integers as specified using the third argument.
-#
-# The individual method will return an individual initialize with the same result as us calling
-# attr_bool 100 times
-toolbox.register(&quot;individual&quot;, tools.initRepeat, creator.Individual, toolbox.attr_bool, 100)
+<span class="token comment"># Here we are registering the mutation process for the children. This flips the value</span>
+<span class="token comment"># of the attributes of the input value and returns the mutant. The individual is </span>
+<span class="token comment"># expected to be a sequence of values, and stay valid after a not operator is called on them</span>
+<span class="token comment"># The indpb argument is the probability of the mutation.</span>
+toolbox<span class="token punctuation">.</span>register<span class="token punctuation">(</span><span class="token string">"mutate"</span><span class="token punctuation">,</span> tools<span class="token punctuation">.</span>mutFlipBit<span class="token punctuation">,</span> indpb<span class="token operator">=</span><span class="token number">0.05</span><span class="token punctuation">)</span>
 
-# Here we are registering a population, an a population will be generated using
-# the function initRepeat. The first argument to initRepeat is the container class, in this case
-# Pythons native list class, and this will be filled with the individuals we registered to the toolbox
-# Unlike registering the structure of individual, we don&#39;t fix the number of individuals that the population
-# should contain
-toolbox.register(&quot;population&quot;, tools.initRepeat, list, toolbox.individual)
+<span class="token comment"># Here we are registering the selection process for the best individual from `tournsize` randomly chosen</span>
+<span class="token comment"># individuals in the population</span>
+toolbox<span class="token punctuation">.</span>register<span class="token punctuation">(</span><span class="token string">"select"</span><span class="token punctuation">,</span> tools<span class="token punctuation">.</span>selTournament<span class="token punctuation">,</span> tournsize<span class="token operator">=</span><span class="token number">3</span><span class="token punctuation">)</span>
 
-# The evaulation function takes in an individual (a child of Pythons native list)
-# And sum&#39;s all the integers in that list (0 or 1). The returned value from the evaluation function
-# must be of a legnth equal to the number of objectives (weights) defined in FitnessMax
-def evalOneMax(individual):
-    return sum(individual),
+<span class="token comment"># Here's our main method where we will execute the genetic algorithm</span>
+<span class="token keyword">def</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># Create a population, in this case pop will be a list of 300 individuals</span>
+    pop <span class="token operator">=</span> toolbox<span class="token punctuation">.</span>population<span class="token punctuation">(</span>n<span class="token operator">=</span><span class="token number">300</span><span class="token punctuation">)</span>
 
-# Next we should register the genetic operators. 
-#
-# Here we are registering the evaluation function to pass the individual into
-toolbox.register(&quot;evaluate&quot;, evalOneMax)
-
-# Here we are registering the mating process, we can use the cxTwoPoint method. This executes
-# a two point crossover (k) on the input sequence of individuals.
-toolbox.register(&quot;mate&quot;, tools.cxTwoPoint)
-
-# Here we are registering the mutation process for the children. This flips the value
-# of the attributes of the input value and returns the mutant. The individual is 
-# expected to be a sequence of values, and stay valid after a not operator is called on them
-# The indpb argument is the probability of the mutation.
-toolbox.register(&quot;mutate&quot;, tools.mutFlipBit, indpb=0.05)
-
-# Here we are registering the selection process for the best individual from `tournsize` randomly chosen
-# individuals in the population
-toolbox.register(&quot;select&quot;, tools.selTournament, tournsize=3)
-
-# Here&#39;s our main method where we will execute the genetic algorithm
-def main():
-    # Create a population, in this case pop will be a list of 300 individuals
-    pop = toolbox.population(n=300)
-
-    # Evaluate the entire population
-    fitnesses = list(map(toolbox.evaluate, pop))
-    for ind, fit in zip(pop, fitnesses):
-        ind.fitness.values = fit
+    <span class="token comment"># Evaluate the entire population</span>
+    fitnesses <span class="token operator">=</span> <span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">(</span>toolbox<span class="token punctuation">.</span>evaluate<span class="token punctuation">,</span> pop<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">for</span> ind<span class="token punctuation">,</span> fit <span class="token keyword">in</span> <span class="token builtin">zip</span><span class="token punctuation">(</span>pop<span class="token punctuation">,</span> fitnesses<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        ind<span class="token punctuation">.</span>fitness<span class="token punctuation">.</span>values <span class="token operator">=</span> fit
     
-    # CXPB  is the probability with which two individuals
-    #       are crossed
-    #
-    # MUTPB is the probability for mutating an individual
-    CXPB, MUTPB = 0.5, 0.2
+    <span class="token comment"># CXPB  is the probability with which two individuals</span>
+    <span class="token comment">#       are crossed</span>
+    <span class="token comment">#</span>
+    <span class="token comment"># MUTPB is the probability for mutating an individual</span>
+    CXPB<span class="token punctuation">,</span> MUTPB <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">,</span> <span class="token number">0.2</span>
 
-    # Extracting all the fitnesses from the population
-    fits = [ind.fitness.values[0] for ind in pop]
+    <span class="token comment"># Extracting all the fitnesses from the population</span>
+    fits <span class="token operator">=</span> <span class="token punctuation">[</span>ind<span class="token punctuation">.</span>fitness<span class="token punctuation">.</span>values<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token keyword">for</span> ind <span class="token keyword">in</span> pop<span class="token punctuation">]</span>
 
-    # Variable keeping track of the number of generations
-    generation_count = 0
+    <span class="token comment"># Variable keeping track of the number of generations</span>
+    generation_count <span class="token operator">=</span> <span class="token number">0</span>
     
-    # Begin the evolution, while we don&#39;t have the Max One for a bit string of 100 (1111...)
-    # And we are below 1000 generations
-    while max(fits) &lt; 100 and generation_count &lt; 1000:
-        # Iterate the generation
-        generation_count = generation_count + 1
-        print(&quot;-- Generation %i --&quot; % generation_count)
+    <span class="token comment"># Begin the evolution, while we don't have the Max One for a bit string of 100 (1111...)</span>
+    <span class="token comment"># And we are below 1000 generations</span>
+    <span class="token keyword">while</span> <span class="token builtin">max</span><span class="token punctuation">(</span>fits<span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">100</span> <span class="token keyword">and</span> generation_count <span class="token operator">&lt;</span> <span class="token number">1000</span><span class="token punctuation">:</span>
+        <span class="token comment"># Iterate the generation</span>
+        generation_count <span class="token operator">=</span> generation_count <span class="token operator">+</span> <span class="token number">1</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"-- Generation %i --"</span> <span class="token operator">%</span> generation_count<span class="token punctuation">)</span>
         
-        # Select the next generations individuals using the selection tournament
-        offspring = toolbox.select(pop, len(pop))
+        <span class="token comment"># Select the next generations individuals using the selection tournament</span>
+        offspring <span class="token operator">=</span> toolbox<span class="token punctuation">.</span>select<span class="token punctuation">(</span>pop<span class="token punctuation">,</span> <span class="token builtin">len</span><span class="token punctuation">(</span>pop<span class="token punctuation">)</span><span class="token punctuation">)</span>
         
-        # Clone the selected individuals to ensure we don&#39;t use a reference to the individuals
-        # but a completely independent instance. Genetic operators in the toolbox modify the objects
-        # in place.
-        offspring = list(map(toolbox.clone, offspring))
+        <span class="token comment"># Clone the selected individuals to ensure we don't use a reference to the individuals</span>
+        <span class="token comment"># but a completely independent instance. Genetic operators in the toolbox modify the objects</span>
+        <span class="token comment"># in place.</span>
+        offspring <span class="token operator">=</span> <span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">(</span>toolbox<span class="token punctuation">.</span>clone<span class="token punctuation">,</span> offspring<span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-        # Apply crossover and mutation on the offspring
-        for child1, child2 in zip(offspring[::2], offspring[1::2]):
-            if random.random() &lt; CXPB:
-                # Use the mate operation we previously registered
-                toolbox.mate(child1, child2)
+        <span class="token comment"># Apply crossover and mutation on the offspring</span>
+        <span class="token keyword">for</span> child1<span class="token punctuation">,</span> child2 <span class="token keyword">in</span> <span class="token builtin">zip</span><span class="token punctuation">(</span>offspring<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span> offspring<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">if</span> random<span class="token punctuation">.</span>random<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> CXPB<span class="token punctuation">:</span>
+                <span class="token comment"># Use the mate operation we previously registered</span>
+                toolbox<span class="token punctuation">.</span>mate<span class="token punctuation">(</span>child1<span class="token punctuation">,</span> child2<span class="token punctuation">)</span>
 
-                # Deleting the fitness marks these offspring as invalid
-                # Allowing us to regenerate their fitness based on their new
-                # genetic code
-                del child1.fitness.values
-                del child2.fitness.values
+                <span class="token comment"># Deleting the fitness marks these offspring as invalid</span>
+                <span class="token comment"># Allowing us to regenerate their fitness based on their new</span>
+                <span class="token comment"># genetic code</span>
+                <span class="token keyword">del</span> child1<span class="token punctuation">.</span>fitness<span class="token punctuation">.</span>values
+                <span class="token keyword">del</span> child2<span class="token punctuation">.</span>fitness<span class="token punctuation">.</span>values
 
-        # For each of the offspring apply some potential mutation
-        for mutant in offspring:
-            if random.random() &lt; MUTPB:
-                toolbox.mutate(mutant)
-                # Deleting the fitness marks these offspring as invalid
-                # Allowing us to regenerate their fitness based on their new
-                # genetic code
-                del mutant.fitness.values
+        <span class="token comment"># For each of the offspring apply some potential mutation</span>
+        <span class="token keyword">for</span> mutant <span class="token keyword">in</span> offspring<span class="token punctuation">:</span>
+            <span class="token keyword">if</span> random<span class="token punctuation">.</span>random<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> MUTPB<span class="token punctuation">:</span>
+                toolbox<span class="token punctuation">.</span>mutate<span class="token punctuation">(</span>mutant<span class="token punctuation">)</span>
+                <span class="token comment"># Deleting the fitness marks these offspring as invalid</span>
+                <span class="token comment"># Allowing us to regenerate their fitness based on their new</span>
+                <span class="token comment"># genetic code</span>
+                <span class="token keyword">del</span> mutant<span class="token punctuation">.</span>fitness<span class="token punctuation">.</span>values
 
-        # Re-evaluate the individuals with an invalid fitness and updated genetic code
-        invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
-        fitnesses = map(toolbox.evaluate, invalid_ind)
-        for ind, fit in zip(invalid_ind, fitnesses):
-            ind.fitness.values = fit
+        <span class="token comment"># Re-evaluate the individuals with an invalid fitness and updated genetic code</span>
+        invalid_ind <span class="token operator">=</span> <span class="token punctuation">[</span>ind <span class="token keyword">for</span> ind <span class="token keyword">in</span> offspring <span class="token keyword">if</span> <span class="token keyword">not</span> ind<span class="token punctuation">.</span>fitness<span class="token punctuation">.</span>valid<span class="token punctuation">]</span>
+        fitnesses <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span>toolbox<span class="token punctuation">.</span>evaluate<span class="token punctuation">,</span> invalid_ind<span class="token punctuation">)</span>
+        <span class="token keyword">for</span> ind<span class="token punctuation">,</span> fit <span class="token keyword">in</span> <span class="token builtin">zip</span><span class="token punctuation">(</span>invalid_ind<span class="token punctuation">,</span> fitnesses<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            ind<span class="token punctuation">.</span>fitness<span class="token punctuation">.</span>values <span class="token operator">=</span> fit
 
-        # Replace the old population with the offspring
-        # Based on the CXPB and MUTPB:
-        # - A portion will potentially be the same as the previous population
-        # - A portion will be the result of K (2) point crossover
-        # - A portion will be the result of mutation
-        pop[:] = offspring
+        <span class="token comment"># Replace the old population with the offspring</span>
+        <span class="token comment"># Based on the CXPB and MUTPB:</span>
+        <span class="token comment"># - A portion will potentially be the same as the previous population</span>
+        <span class="token comment"># - A portion will be the result of K (2) point crossover</span>
+        <span class="token comment"># - A portion will be the result of mutation</span>
+        pop<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">]</span> <span class="token operator">=</span> offspring
 
-        # Gather all the fitnesses in one list and print the stats
-        fits = [ind.fitness.values[0] for ind in pop]
+        <span class="token comment"># Gather all the fitnesses in one list and print the stats</span>
+        fits <span class="token operator">=</span> <span class="token punctuation">[</span>ind<span class="token punctuation">.</span>fitness<span class="token punctuation">.</span>values<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token keyword">for</span> ind <span class="token keyword">in</span> pop<span class="token punctuation">]</span>
         
-        # Population size
-        length = len(pop)
+        <span class="token comment"># Population size</span>
+        length <span class="token operator">=</span> <span class="token builtin">len</span><span class="token punctuation">(</span>pop<span class="token punctuation">)</span>
         
-        # Current mean (average bit sum)
-        mean = sum(fits) / length
+        <span class="token comment"># Current mean (average bit sum)</span>
+        mean <span class="token operator">=</span> <span class="token builtin">sum</span><span class="token punctuation">(</span>fits<span class="token punctuation">)</span> <span class="token operator">/</span> length
 
-        # The standard deviation across the population
-        sum2 = sum(x*x for x in fits)
-        std = abs(sum2 / length - mean**2)**0.5
+        <span class="token comment"># The standard deviation across the population</span>
+        sum2 <span class="token operator">=</span> <span class="token builtin">sum</span><span class="token punctuation">(</span>x<span class="token operator">*</span>x <span class="token keyword">for</span> x <span class="token keyword">in</span> fits<span class="token punctuation">)</span>
+        std <span class="token operator">=</span> <span class="token builtin">abs</span><span class="token punctuation">(</span>sum2 <span class="token operator">/</span> length <span class="token operator">-</span> mean<span class="token operator">**</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token operator">**</span><span class="token number">0.5</span>
         
-        print(&quot;  Min %s&quot; % min(fits))
-        print(&quot;  Max %s&quot; % max(fits))
-        print(&quot;  Avg %s&quot; % mean)
-        print(&quot;  Std %s&quot; % std)
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"  Min %s"</span> <span class="token operator">%</span> <span class="token builtin">min</span><span class="token punctuation">(</span>fits<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"  Max %s"</span> <span class="token operator">%</span> <span class="token builtin">max</span><span class="token punctuation">(</span>fits<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"  Avg %s"</span> <span class="token operator">%</span> mean<span class="token punctuation">)</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"  Std %s"</span> <span class="token operator">%</span> std<span class="token punctuation">)</span>
 
-if __name__ == &quot;__main__&quot;:
-    main()</code></pre></div></section><div><small class="bg-red-200 pill text-sm ml-1"><a href="/blog">numerical optimization</a></small><small class="bg-red-200 pill text-sm ml-1"><a href="/blog">probability</a></small><small class="bg-red-200 pill text-sm ml-1"><a href="/blog">python</a></small></div><nav class="py-2"><ul style="display:flex;flex-wrap:wrap;justify-content:space-between;list-style:none;padding:0"><li class="inline-block border border-blue-500 rounded py-1 px-3 bg-blue-500 text-white"><a rel="prev" href="/simulated-annealing-numerical-optimization/">← <!-- -->Simulated Annealing in Numerical Optimization</a></li></ul></nav><footer><div class="md:flex bg-white rounded-lg p-6"><div class="h-16 w-16 md:h-24 md:w-24 rounded-full mx-auto md:mx-0 md:mr-6 gatsby-image-wrapper" style="position:relative;overflow:hidden"><div aria-hidden="true" style="width:100%;padding-bottom:133.5%"></div><img aria-hidden="true" src="data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAbABQDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAIFAwT/xAAXAQEBAQEAAAAAAAAAAAAAAAACAAED/9oADAMBAAIQAxAAAAGhPocB2mTCiXsnQoKM/wD/xAAeEAABAwQDAAAAAAAAAAAAAAACAQMSAAQUMxMxMv/aAAgBAQABBQJViOQZK2UwpSTlyhArlyAB07tutrHtzZ//xAAXEQEAAwAAAAAAAAAAAAAAAAAAARAR/9oACAEDAQE/AWpr/8QAGBEBAQADAAAAAAAAAAAAAAAAAQAQERL/2gAIAQIBAT8BLlg0Y//EACAQAAIBBAEFAAAAAAAAAAAAAAABAhARITESIkFRcYH/2gAIAQEABj8CbOmOBOlsDjwe/JZbZN97EkfKS9n/xAAeEAEAAgICAwEAAAAAAAAAAAABABEhQTGxUWGBof/aAAgBAQABPyE0RQNStXO88y7lwipQy5jdRXIpEFa6Zk26YPu5QBwNRPyI8jSZn6E//9oADAMBAAIAAwAAABB0zbH/xAAZEQADAAMAAAAAAAAAAAAAAAAAAREQIUH/2gAIAQMBAT8QavYQtUavH//EABkRAAMAAwAAAAAAAAAAAAAAAAABIRExUf/aAAgBAgEBPxDHg31Isi0f/8QAHxABAQACAQQDAAAAAAAAAAAAAREAITFBUbHBYXGB/9oACAEBAAE/ELoBIKuPEENRV9+sNjS0JNnxmhjeFi0ozoTnCVYUFaOky8HQR2Dl9YLRD3VES+cJrI/5r1jGKpAdsaRaQXnEqvL53P/Z" alt="Mattamorphic" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:1;transition-delay:500ms"/><noscript><picture><source srcset="/static/1629b435cf8cbf94512b714c5d58c4cc/f836f/profile-pic.jpg 200w,
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">"__main__"</span><span class="token punctuation">:</span>
+    main<span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre></div></section><div><small class="bg-red-200 pill text-sm ml-1"><a href="/blog">numerical optimization</a></small><small class="bg-red-200 pill text-sm ml-1"><a href="/blog">probability</a></small><small class="bg-red-200 pill text-sm ml-1"><a href="/blog">python</a></small></div><nav class="py-2"><ul style="display:flex;flex-wrap:wrap;justify-content:space-between;list-style:none;padding:0"><li class="inline-block border border-blue-500 rounded py-1 px-3 bg-blue-500 text-white"><a rel="prev" href="/simulated-annealing-numerical-optimization/">← <!-- -->Simulated Annealing in Numerical Optimization</a></li></ul></nav><footer><div class="md:flex bg-white rounded-lg p-6"><div class="h-16 w-16 md:h-24 md:w-24 rounded-full mx-auto md:mx-0 md:mr-6 gatsby-image-wrapper" style="position:relative;overflow:hidden"><div aria-hidden="true" style="width:100%;padding-bottom:133.5%"></div><img aria-hidden="true" src="data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAbABQDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAIFAwT/xAAXAQEBAQEAAAAAAAAAAAAAAAACAAED/9oADAMBAAIQAxAAAAGhPocB2mTCiXsnQoKM/wD/xAAeEAABAwQDAAAAAAAAAAAAAAACAQMSAAQUMxMxMv/aAAgBAQABBQJViOQZK2UwpSTlyhArlyAB07tutrHtzZ//xAAXEQEAAwAAAAAAAAAAAAAAAAAAARAR/9oACAEDAQE/AWpr/8QAGBEBAQADAAAAAAAAAAAAAAAAAQAQERL/2gAIAQIBAT8BLlg0Y//EACAQAAIBBAEFAAAAAAAAAAAAAAABAhARITESIkFRcYH/2gAIAQEABj8CbOmOBOlsDjwe/JZbZN97EkfKS9n/xAAeEAEAAgICAwEAAAAAAAAAAAABABEhQTGxUWGBof/aAAgBAQABPyE0RQNStXO88y7lwipQy5jdRXIpEFa6Zk26YPu5QBwNRPyI8jSZn6E//9oADAMBAAIAAwAAABB0zbH/xAAZEQADAAMAAAAAAAAAAAAAAAAAAREQIUH/2gAIAQMBAT8QavYQtUavH//EABkRAAMAAwAAAAAAAAAAAAAAAAABIRExUf/aAAgBAgEBPxDHg31Isi0f/8QAHxABAQACAQQDAAAAAAAAAAAAAREAITFBUbHBYXGB/9oACAEBAAE/ELoBIKuPEENRV9+sNjS0JNnxmhjeFi0ozoTnCVYUFaOky8HQR2Dl9YLRD3VES+cJrI/5r1jGKpAdsaRaQXnEqvL53P/Z" alt="Mattamorphic" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:1;transition-delay:500ms"/><noscript><picture><source srcset="/static/1629b435cf8cbf94512b714c5d58c4cc/f836f/profile-pic.jpg 200w,
 /static/1629b435cf8cbf94512b714c5d58c4cc/2244e/profile-pic.jpg 400w,
 /static/1629b435cf8cbf94512b714c5d58c4cc/14b42/profile-pic.jpg 800w,
 /static/1629b435cf8cbf94512b714c5d58c4cc/47498/profile-pic.jpg 1200w,
