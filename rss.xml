@@ -1,4 +1,281 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Mattamorphic]]></title><description><![CDATA[All things Mattamorphic.]]></description><link>https://mattamorphic.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 08 Sep 2020 08:46:12 GMT</lastBuildDate><item><title><![CDATA[Simulated Annealing in Numerical Optimization]]></title><description><![CDATA[Simulated annealing in numerical optimization A quick referesher on numerical optimization What is a probabilistic approach? A probabilistic…]]></description><link>https://mattamorphic.github.io/simulated-annealing-numerical-optimization/</link><guid isPermaLink="false">https://mattamorphic.github.io/simulated-annealing-numerical-optimization/</guid><pubDate>Fri, 19 Jun 2020 18:00:32 GMT</pubDate><content:encoded>&lt;h2&gt;Simulated annealing in numerical optimization&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Mattamorphic]]></title><description><![CDATA[All things Mattamorphic.]]></description><link>https://mattamorphic.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 09 Sep 2020 10:59:27 GMT</lastBuildDate><item><title><![CDATA[Genetic Evolution in Numerical Optimization]]></title><description><![CDATA[Genetic evolution in numerical optimization Evolutionary algorithms Evolutionary algorithms are routed in the theory of evolution, and…]]></description><link>https://mattamorphic.github.io/genetic-evolution-numerical-optimization/</link><guid isPermaLink="false">https://mattamorphic.github.io/genetic-evolution-numerical-optimization/</guid><pubDate>Thu, 20 Aug 2020 13:15:00 GMT</pubDate><content:encoded>&lt;h2&gt;Genetic evolution in numerical optimization&lt;/h2&gt;
+&lt;h3&gt;Evolutionary algorithms&lt;/h3&gt;
+&lt;p&gt;Evolutionary algorithms are routed in the theory of evolution, and survival of the fittest, whereby solutions that best adapt to the environment are the ones that will reproduce. These algorithms aim to find solutions with the best fitness, and those that survive are the ones to produce the next generation.&lt;/p&gt;
+&lt;h4&gt;The underlying process&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Generate a random population&lt;/li&gt;
+&lt;li&gt;Evaulate the fitness of the population&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Repeat the following steps until termination (time / generation limit) or the merit function is satisfied (the measure of success):&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Select the fittest solutions for mating (parents)&lt;/li&gt;
+&lt;li&gt;Create new solutions by using crossover and an element of mutation of the parents (children)&lt;/li&gt;
+&lt;li&gt;Determine the fitness of the children&lt;/li&gt;
+&lt;li&gt;Replace the least fit of the population, with the children&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The mating process used to generate the children uses a combination of methods inspired by nature.
+The fitness function can use an approximation, if it takes too long to compute this can affect the time for running multiple generations&lt;/p&gt;
+&lt;h3&gt;Genetic algorithms&lt;/h3&gt;
+&lt;p&gt;Genetic algorithms are a subset of evolutionary algorithms whereby each solution is represented as a genetic code, a most basic form of this can be expressed as a bit string &lt;code class=&quot;language-text&quot;&gt;01001001&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The mating process is achieved through a crossover operation to combine the genetic code of the parents. Mutation is applied to the children&apos;s genetic code to ensure diversity in the gene pool.&lt;/p&gt;
+&lt;p&gt;The first generation of the population is generally randomised, to remove any potential bias / assumptions.&lt;/p&gt;
+&lt;p&gt;The merit function expresses &quot;what is wished for&quot; and the measure of success.  &lt;/p&gt;
+&lt;p&gt;While the merit function is not satified and there are remaining generations:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Evaluate the fitness of every member of the population against this merit function&lt;/li&gt;
+&lt;li&gt;If a solution satifies the merit function, stop and return the solution&lt;/li&gt;
+&lt;li&gt;Randomly select a set of the most fit solutions for mating to produce new children&lt;/li&gt;
+&lt;li&gt;Update the population&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4&gt;Fitness&lt;/h4&gt;
+&lt;p&gt;Evaluating the fitness of the solutions in the population is dependent on the problem. In genetic algorithms that have a high fitness value represent a strong solution. As most optimisation problems are looking for a global minima, it&apos;s definitely worth making the fitness the reciprocal value to be optimised, such that a lower value produces a highter fitness value. &lt;/p&gt;
+&lt;h4&gt;Selection&lt;/h4&gt;
+&lt;p&gt;After the fitness fo the population has been evaluated solutions need to be selected to mate and mutate to derive the next generation. The fitness function and it&apos;s complexities determines whether the whole population is tested, or a sample - for instance a large domain or a complex fitness function.&lt;/p&gt;
+&lt;p&gt;There are multiple techniques that can be used for mating and producing children, genetic algorithms favour crossover and mutation. Crossover is applied to the parents to generate children, followed by probabilitistic mutation on the children for diversity.&lt;/p&gt;
+&lt;h5&gt;Crossover&lt;/h5&gt;
+&lt;p&gt;Crossover is where a portion of the genetic code of parent A, is combined with a portion of the genetic code of parent B to produce children. There are 3 approaches, single crossover where a single point is used in the genetic code, K crossover where k points are used in the genetic code to oscillate between parent A and parent B, and roulette where probability is used to select genetic code from parent A or parent B.&lt;/p&gt;
+&lt;h6&gt;Single&lt;/h6&gt;
+&lt;p&gt;In single crossover a single point is chosen between the start and end of the genetic code. The first childs&apos; genetic code will be constructed by the code of parent A before the crossover point, and B after the crossover point. Likewise the inverse is true for the second child.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Parent A: 0110 0001
+Parent B: 1100 1101
+
+Crossover: 3
+
+Child A: 0110 1101
+Child B: 1101 0001&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h6&gt;K&lt;/h6&gt;
+&lt;p&gt;In K crossover there are more than 1 crossover point, and there&apos;s an alternation between the genetic code of the parents at these points.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Parent A: 0110 0001
+Parent B: 1100 1101
+
+Crossover: 3, 5
+
+Child A: 0110 1001
+Child B: 1100 0101&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h6&gt;Roulette&lt;/h6&gt;
+&lt;p&gt;In roulette an element of randomness is introduced to determine what genetic code to take from each of the parents when generating the children. This process applies the following steps:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;First the fitness population is totalled, and each member is weighted by their fitness divided by the total.&lt;/li&gt;
+&lt;li&gt;Two random numbers are generated for each parent, and whichever members ranges contain those numbers are the selected parents.&lt;/li&gt;
+&lt;li&gt;Random numbers are used again to decide how the genetic code is mixed, for each bit of the genetic code generate a number, if the number is less than 0.5 choose from parent A, else choose from parent B.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;Example&lt;/strong&gt;
+Given a population of 3:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;A: 0101 1111 fitness: 3&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;B: 1001 1100 fitness: 5&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;C: 1101 1011 fitness: 2&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Total fitness: 10&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;A = 3 / 10 = 0.3&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;B = 5 / 10 = 0.5&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;C = 2 / 10 = 0.2&lt;/code&gt;
+Generate a range for each of the parents:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;A = [0.0, 0.3]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;B = [0.3, 0.8]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;C = [0.8, 1.0]&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Generate random numbers to select the parents: &lt;code class=&quot;language-text&quot;&gt;0.6, 0.9 = B, C&lt;/code&gt;
+Mix the genetic code based on random numbers:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Parent B: 1001 1100
+Parent C: 1101 1011&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Random Numbers: 0.1, 0.9, 0.6, 0.2, 0.8, 0.3, 0.4, 0.7&lt;/p&gt;
+&lt;p&gt;Child: 1101 1101&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;##### Mutation
+Mutation involves changing parts of the children independent of the parents to ensure genetic diversity.
+
+### Disadvantages of genetic algorithms
+- Repeated fitness evaluations exhaust a lot of computational time.
+- Scalability with complexity is poor.
+- Better solutions are only better relative to other candidate solutions.
+- Genetic algorithms will converge on local optima, unlike simulated annealing that sacrifices local fitness to find better global fitness.
+
+### Example
+In this example we&amp;#39;ll look at implementing a genetic algorithm using [DEAP](https://github.com/DEAP/deap), an evolutionary computational framework available in Python, to solve the *One Max Problem*.
+
+#### One Max Problem
+This is a simple optimization problem, the task is to find the binary string of a given length that maximizes the sum of it&amp;#39;s digits. For example, the one max of length 5 will consider: 
+- `10010 : 2`
+- `01110 : 3`
+- `11111 : 5`
+
+We can see that the solution to this problem will always be a string that comprises all 1s, however the genetic algorithm doesn&amp;#39;t know this, and has to look fo this solution using evolution. This makes it a great test case.
+
+```python
+import random
+
+from deap import base, creator, tools
+
+# Creator is a class factory that builds new classes at run-time
+# The first parameter is the name of the new class
+# The second parameter is the base class it will inherit
+# Subsequent arguments are the attributes of the class
+#
+# Example:
+#   creator.create(&amp;quot;Student&amp;quot;, Person, name=&amp;quot;Matt&amp;quot;)
+
+# FitnessMax inherits from Fitness class of `deap.base` module
+# This has an additional attribute called `weights`
+# The value of weights is a tuple
+creator.create(&amp;quot;FitnessMax&amp;quot;, base.Fitness, weights=(1.0,))
+
+# Individual inherits from pythons list class, and contains
+# FitnessMax as it&amp;#39;s fitness attribute. This will represent an 
+# individual in the population
+creator.create(&amp;quot;Individual&amp;quot;, list, fitness=creator.FitnessMax)
+
+# Toolbox is used to configure the genetic algorithm
+# and allows us to register, and unregister content
+toolbox = base.Toolbox()
+
+# Attribute generator - to generate a random integer between 0 and 1
+toolbox.register(&amp;quot;attr_bool&amp;quot;, random.randint, 0, 1)
+
+# Structure initializers instatiate the individual and the population
+#
+# Here we are registering an individual, and an individual will be generated using
+# the function initRepeat. The first argument to initRepeat is the container class, the Individual
+# we created above. This container will be filled using the method attr_bool we registered above, 
+# provided as a second argument, and will contain 100 integers as specified using the third argument.
+#
+# The individual method will return an individual initialize with the same result as us calling
+# attr_bool 100 times
+toolbox.register(&amp;quot;individual&amp;quot;, tools.initRepeat, creator.Individual, toolbox.attr_bool, 100)
+
+# Here we are registering a population, an a population will be generated using
+# the function initRepeat. The first argument to initRepeat is the container class, in this case
+# Pythons native list class, and this will be filled with the individuals we registered to the toolbox
+# Unlike registering the structure of individual, we don&amp;#39;t fix the number of individuals that the population
+# should contain
+toolbox.register(&amp;quot;population&amp;quot;, tools.initRepeat, list, toolbox.individual)
+
+# The evaulation function takes in an individual (a child of Pythons native list)
+# And sum&amp;#39;s all the integers in that list (0 or 1). The returned value from the evaluation function
+# must be of a legnth equal to the number of objectives (weights) defined in FitnessMax
+def evalOneMax(individual):
+    return sum(individual),
+
+# Next we should register the genetic operators. 
+#
+# Here we are registering the evaluation function to pass the individual into
+toolbox.register(&amp;quot;evaluate&amp;quot;, evalOneMax)
+
+# Here we are registering the mating process, we can use the cxTwoPoint method. This executes
+# a two point crossover (k) on the input sequence of individuals.
+toolbox.register(&amp;quot;mate&amp;quot;, tools.cxTwoPoint)
+
+# Here we are registering the mutation process for the children. This flips the value
+# of the attributes of the input value and returns the mutant. The individual is 
+# expected to be a sequence of values, and stay valid after a not operator is called on them
+# The indpb argument is the probability of the mutation.
+toolbox.register(&amp;quot;mutate&amp;quot;, tools.mutFlipBit, indpb=0.05)
+
+# Here we are registering the selection process for the best individual from `tournsize` randomly chosen
+# individuals in the population
+toolbox.register(&amp;quot;select&amp;quot;, tools.selTournament, tournsize=3)
+
+# Here&amp;#39;s our main method where we will execute the genetic algorithm
+def main():
+    # Create a population, in this case pop will be a list of 300 individuals
+    pop = toolbox.population(n=300)
+
+    # Evaluate the entire population
+    fitnesses = list(map(toolbox.evaluate, pop))
+    for ind, fit in zip(pop, fitnesses):
+        ind.fitness.values = fit
+    
+    # CXPB  is the probability with which two individuals
+    #       are crossed
+    #
+    # MUTPB is the probability for mutating an individual
+    CXPB, MUTPB = 0.5, 0.2
+
+    # Extracting all the fitnesses from the population
+    fits = [ind.fitness.values[0] for ind in pop]
+
+    # Variable keeping track of the number of generations
+    generation_count = 0
+    
+    # Begin the evolution, while we don&amp;#39;t have the Max One for a bit string of 100 (1111...)
+    # And we are below 1000 generations
+    while max(fits) &amp;lt; 100 and generation_count &amp;lt; 1000:
+        # Iterate the generation
+        generation_count = generation_count + 1
+        print(&amp;quot;-- Generation %i --&amp;quot; % generation_count)
+        
+        # Select the next generations individuals using the selection tournament
+        offspring = toolbox.select(pop, len(pop))
+        
+        # Clone the selected individuals to ensure we don&amp;#39;t use a reference to the individuals
+        # but a completely independent instance. Genetic operators in the toolbox modify the objects
+        # in place.
+        offspring = list(map(toolbox.clone, offspring))
+
+        # Apply crossover and mutation on the offspring
+        for child1, child2 in zip(offspring[::2], offspring[1::2]):
+            if random.random() &amp;lt; CXPB:
+                # Use the mate operation we previously registered
+                toolbox.mate(child1, child2)
+
+                # Deleting the fitness marks these offspring as invalid
+                # Allowing us to regenerate their fitness based on their new
+                # genetic code
+                del child1.fitness.values
+                del child2.fitness.values
+
+        # For each of the offspring apply some potential mutation
+        for mutant in offspring:
+            if random.random() &amp;lt; MUTPB:
+                toolbox.mutate(mutant)
+                # Deleting the fitness marks these offspring as invalid
+                # Allowing us to regenerate their fitness based on their new
+                # genetic code
+                del mutant.fitness.values
+
+        # Re-evaluate the individuals with an invalid fitness and updated genetic code
+        invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
+        fitnesses = map(toolbox.evaluate, invalid_ind)
+        for ind, fit in zip(invalid_ind, fitnesses):
+            ind.fitness.values = fit
+
+        # Replace the old population with the offspring
+        # Based on the CXPB and MUTPB:
+        # - A portion will potentially be the same as the previous population
+        # - A portion will be the result of K (2) point crossover
+        # - A portion will be the result of mutation
+        pop[:] = offspring
+
+        # Gather all the fitnesses in one list and print the stats
+        fits = [ind.fitness.values[0] for ind in pop]
+        
+        # Population size
+        length = len(pop)
+        
+        # Current mean (average bit sum)
+        mean = sum(fits) / length
+
+        # The standard deviation across the population
+        sum2 = sum(x*x for x in fits)
+        std = abs(sum2 / length - mean**2)**0.5
+        
+        print(&amp;quot;  Min %s&amp;quot; % min(fits))
+        print(&amp;quot;  Max %s&amp;quot; % max(fits))
+        print(&amp;quot;  Avg %s&amp;quot; % mean)
+        print(&amp;quot;  Std %s&amp;quot; % std)
+
+if __name__ == &amp;quot;__main__&amp;quot;:
+    main()&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[Simulated Annealing in Numerical Optimization]]></title><description><![CDATA[Simulated annealing in numerical optimization A quick referesher on numerical optimization What is a probabilistic approach? A probabilistic…]]></description><link>https://mattamorphic.github.io/simulated-annealing-numerical-optimization/</link><guid isPermaLink="false">https://mattamorphic.github.io/simulated-annealing-numerical-optimization/</guid><pubDate>Fri, 19 Jun 2020 18:00:32 GMT</pubDate><content:encoded>&lt;h2&gt;Simulated annealing in numerical optimization&lt;/h2&gt;
 &lt;h3&gt;A quick referesher on numerical optimization&lt;/h3&gt;
 &lt;h3&gt;What is a probabilistic approach?&lt;/h3&gt;
 &lt;p&gt;A probabilistic approach to numerical optimization applies elements of randomness to determine where to search next in the domain. The run time of the algorithm is dependent on the incoming random values that are presented to it. Sometimes, this will mean that it gets close to a global optimum really quickly, other times this might take longer - this is owing to the non-deterministic nature of randomness.&lt;/p&gt;
