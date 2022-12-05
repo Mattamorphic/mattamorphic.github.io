@@ -111,12 +111,12 @@ def energy(self):
     return e
 ```
 
-The move function makes small changes to the current state (in the case of the travelling salesman, swapping 2 cities in the route), to determine the neighbours of state, and passes these neighbours of state through the energy function to create a value, and return the difference to the energy of the current state:
+The move function makes small changes to the current state (in the case of the travelling sales person, swapping 2 cities in the route), to determine the neighbours of state, and passes these neighbours of state through the energy function to create a value, and return the difference to the energy of the current state:
 
 ```python
 def move(self):
     """Swaps two cities in the route."""
-    # no efficiency gain, just proof of concept
+    # no efficiency gain, proof of concept
     # demonstrates returning the delta energy (optional)
     initial_energy = self.energy()
 
