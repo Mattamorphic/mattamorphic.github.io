@@ -1,0 +1,30 @@
+/* Modern engineering design updates */
+.select {
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  width: auto;
+  box-sizing: border-box;
+  flex: 1;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 1rem;
+  color: #333333;
+  background-color: #fdfdfd;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23333" d="M2 0L0 2h4z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px;
+}
+
+.select:focus {
+  border-color: #007acc;
+  box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.2);
+  outline: none;
+}
+
+.select:hover {
+  border-color: #b0b0b0;
+}

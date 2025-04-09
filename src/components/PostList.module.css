@@ -1,0 +1,84 @@
+/* Modern engineering design updates */
+.filterSortContainer {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.container {
+  padding: 20px;
+  font-family: 'Inter', Arial, sans-serif;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  color: #333333;
+}
+
+.list {
+  list-style-type: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.listItem {
+  margin: 0;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fdfdfd;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.listItem:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.listItem h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #007acc;
+}
+
+.listItem p {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #555555;
+}
+
+/* Add styles for distinct tag colors */
+.tag {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin-right: 5px;
+}
+
+.tag[data-color="red"] {
+  background-color: #e57373;
+}
+
+.tag[data-color="blue"] {
+  background-color: #64b5f6;
+}
+
+.tag[data-color="green"] {
+  background-color: #81c784;
+}
+
+.tag[data-color="yellow"] {
+  background-color: #fff176;
+}
+
+.tag[data-color="purple"] {
+  background-color: #ba68c8;
+}
