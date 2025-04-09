@@ -4,17 +4,17 @@
   border-radius: 8px;
   box-sizing: border-box;
   flex: 1;
-  font-family: 'Inter', Arial, sans-serif;
+  font-family: Inter, Arial, sans-serif;
   font-size: 1rem;
-  color: #333333;
+  color: #333;
   background-color: #fdfdfd;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 2px 4px rgb(0 0 0 / 5%);
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .input:focus {
   border-color: #007acc;
-  box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.2);
+  box-shadow: 0 0 0 3px rgb(0 122 204 / 20%);
   outline: none;
 }
 

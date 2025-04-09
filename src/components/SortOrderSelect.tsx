@@ -1,3 +1,4 @@
+import React from "react";
 import styles from "./SortOrderSelect.module.css";
 
 interface SortOrderSelectProps {
@@ -10,7 +11,7 @@ const SortOrderSelect = ({ value, onChange }: SortOrderSelectProps) => {
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className={styles.select}
+      className={styles['select']}
     >
       <option value="asc">Ascending</option>
       <option value="desc">Descending</option>

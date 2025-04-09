@@ -12,7 +12,7 @@ const Tags: React.FC<TagsProps> = ({ tags }) => {
       {tags.map((tag, idx) => (
         <span
           key={idx}
-          className={styles.tag}
+          className={styles["tag"]}
           style={{ backgroundColor: generateTagColor(tag) }}
         >
           {tag}

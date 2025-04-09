@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import FilterInput from "./FilterInput";
 import SortOrderSelect from "./SortOrderSelect";
@@ -18,11 +19,6 @@ interface MarkdownData {
   date: string;
   tags: string[];
   updated: string;
-}
-
-interface MarkdownFile {
-  content: string;
-  data: MarkdownData;
 }
 
 const PostList = () => {
@@ -90,13 +86,13 @@ const PostList = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.filterSortContainer}>
+      <div className={styles["filter-sort-container"]}>
         <FilterInput value={filterTag} onChange={setFilterTag} />
         <SortOrderSelect value={sortOrder} onChange={setSortOrder} />
       </div>
       <ul className={styles.list}>
         {filteredPosts.map((post, index) => (
-          <li key={post.id} className={styles.listItem}>
+          <li key={post.id} className={styles["list-item"]}>
             <PostItem post={post} index={index} />
           </li>
         ))}

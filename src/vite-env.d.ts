@@ -3,7 +3,7 @@ interface ImportMeta {
   glob: (pattern: string) => Record<
     string,
     () => Promise<{
-      attributes: any;
+      attributes: unknown;
       default: string;
     }>
   >;

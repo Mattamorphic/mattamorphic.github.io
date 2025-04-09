@@ -1,3 +1,4 @@
+import React from "react";
 import styles from "./FilterInput.module.css";
 
 const FilterInput = ({ value, onChange }: { value: string; onChange: (value: string) => void }) => {
@@ -6,7 +7,7 @@ const FilterInput = ({ value, onChange }: { value: string; onChange: (value: str
       type="text"
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className={styles.input}
+      className={styles['input']}
       placeholder="Filter posts..."
     />
   );

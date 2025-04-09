@@ -1,3 +1,4 @@
+import React from "react";
 import { useParams } from "react-router-dom";
 import posts from "../posts.json";
 import styles from "./PostDetail.module.css";
@@ -13,7 +14,7 @@ const PostDetail = () => {
   }
 
   return (
-    <div className={styles.postDetail}>
+    <div className={styles["post-detail"]}>
       <h1>{post.title}</h1>
       <p><FormattedDate date={post.date} /></p>
       <Tags tags={post.tags} />
