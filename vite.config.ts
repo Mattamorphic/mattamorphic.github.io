@@ -8,4 +8,16 @@ export default defineConfig(({ mode }) => ({
     react(),
     markdown(),
   ],
+  server: {
+    open: true, // Automatically open the app in the browser during development
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        assetFileNames: 'assets/[name]-[hash][extname]',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+      },
+    },
+  },
 }));
